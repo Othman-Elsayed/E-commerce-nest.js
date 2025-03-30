@@ -1,0 +1,16 @@
+{
+  "cSpell.words": ["dtos"],
+  "rest-client.environmentVariables": {
+    "$shared": {
+      "version": "v1"
+    },
+    "development": {
+      "host": "localhost:27018",
+      "token": "dev_token_123"
+    },
+    "production": {
+      "host": "api.example.com",
+      "token": "prod_token_456"
+    }
+  }
+}

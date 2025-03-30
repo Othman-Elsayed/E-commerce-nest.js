@@ -1,0 +1,37 @@
+@baseUrl = http://localhost:27018
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U4YTY4ZTUwMDEyMmQwNGU2NmUxNjIiLCJpYXQiOjE3NDMzMDA0NTksImV4cCI6MTc0MzM4Njg1OX0.mGAe3VD6zdoWKiN4H0kuS6KgqXoi3c10NjbLVdJO2Go 
+
+### - Get all users 
+GET {{baseUrl}}/users
+Content-Type: application/json
+Authorization: {{token}}
+
+### - Get single user
+GET {{baseUrl}}/user?_id=67e89fa4b3cc63e8dbba0bc8
+Content-Type: application/json
+Authorization: {{token}}
+
+### - Register user 
+POST {{baseUrl}}/register
+Content-Type: application/json
+
+{
+    "name": "5",
+    "phoneNumber": "+20 1214144124",
+    "country": "egypt",
+    "email": "5@gmail.com",
+    "password": "123456"
+}
+
+### - Login user
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+    "email": "5@gmail.com",
+    "password": "123456"
+}
+ 
+
+ 
+ 
