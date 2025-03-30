@@ -9,4 +9,6 @@ enum PrivacySetting {
   PRIVATE = 'PRIVATE',
 }
 
-export { Roles, PrivacySetting };
+const ROLES_KEY = 'roles';
+
+export { Roles, PrivacySetting, ROLES_KEY };

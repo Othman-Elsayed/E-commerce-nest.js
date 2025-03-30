@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { PrivacySetting } from '@utils/constants';
+import { PrivacySetting, Roles } from '@utils/constants';
 import { ImgType } from '@utils/types';
 
 @Schema({
@@ -47,14 +47,21 @@ export class User {
     enum: PrivacySetting,
     default: PrivacySetting.PRIVATE,
   })
-  email_privacy: PrivacySetting;
+  email_privacy: string;
 
   @Prop({
     type: String,
     enum: PrivacySetting,
     default: PrivacySetting.PRIVATE,
   })
-  phone_privacy: PrivacySetting;
+  phone_privacy: string;
+
+  @Prop({
+    type: String,
+    enum: Roles,
+    default: Roles.USER,
+  })
+  roles: string;
 
   @Prop({
     type: String,
