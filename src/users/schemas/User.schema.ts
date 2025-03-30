@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { PrivacySetting, Roles } from '@utils/constants';
+import { PrivacySetting, RolesType } from '@utils/constants';
 import { ImgType } from '@utils/types';
 
 @Schema({
@@ -58,8 +58,8 @@ export class User {
 
   @Prop({
     type: String,
-    enum: Roles,
-    default: Roles.USER,
+    enum: RolesType,
+    default: RolesType.USER,
   })
   roles: string;
 

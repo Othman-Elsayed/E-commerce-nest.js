@@ -4,7 +4,7 @@ import { User } from './schemas/User.schema';
 import { Model } from 'mongoose';
 import { RegisterDto } from 'src/auth/dtos/register.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
-import { Roles } from '@utils/constants';
+import { RolesType } from '@utils/constants';
 
 @Injectable()
 export class UserService {
@@ -18,9 +18,9 @@ export class UserService {
     return users;
   }
 
-  async findOne(filter: any, roles?: Roles) {
+  async findOne(filter: any, roles?: RolesType) {
     let user: any;
-    if (roles?.includes(Roles.ADMIN)) {
+    if (roles?.includes(RolesType.ADMIN)) {
       user = await this.userModel
         .findOne(filter)
         .select('+password +email +phoneNumber');

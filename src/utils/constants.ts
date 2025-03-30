@@ -1,4 +1,4 @@
-enum Roles {
+enum RolesType {
   ADMIN = 'ADMIN',
   USER = 'USER',
 }
@@ -11,4 +11,4 @@ enum PrivacySetting {
 
 const ROLES_KEY = 'roles';
 
-export { Roles, PrivacySetting, ROLES_KEY };
+export { RolesType, PrivacySetting, ROLES_KEY };

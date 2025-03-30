@@ -1,3 +1,4 @@
+import { UserService } from './../../users/user.service';
 import { ConfigService } from '@nestjs/config';
 import {
   CanActivate,

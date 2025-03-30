@@ -7,7 +7,7 @@ import {
 import { LoginDto } from './dtos/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { RegisterDto } from './dtos/register.dto';
-import { Roles } from '@utils/constants';
+import { RolesType } from '@utils/constants';
 
 @Injectable()
 export class AuthService {
@@ -29,7 +29,7 @@ export class AuthService {
   async login(dto: LoginDto) {
     const findUser: any = await this.userService.findOne(
       { email: dto.email },
-      Roles.ADMIN,
+      RolesType.ADMIN,
     );
     if (!findUser)
       throw new NotFoundException('password or email incorrect ❌');
