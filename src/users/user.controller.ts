@@ -29,11 +29,6 @@ export class UserController {
     return this.userService.findOne({ _id });
   }
 
-  @Post('user')
-  create(@Body() dto: RegisterDto) {
-    return this.userService.create(dto);
-  }
-
   @Put('user')
   update(@Body() dto: UpdateUserDto) {
     return this.userService.update(dto);
