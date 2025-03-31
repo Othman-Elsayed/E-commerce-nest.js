@@ -34,6 +34,11 @@ export class Comment {
   text: string;
 
   @Prop({
+    type: String,
+  })
+  record: string;
+
+  @Prop({
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'Comment',
   })

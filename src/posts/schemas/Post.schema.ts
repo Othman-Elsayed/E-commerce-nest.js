@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { PrivacySetting, RolesType } from '@utils/constants';
+import { PrivacySetting } from '@utils/constants';
 import { ImgType, VideoType } from '@utils/types';
 import mongoose, { Types } from 'mongoose';
 

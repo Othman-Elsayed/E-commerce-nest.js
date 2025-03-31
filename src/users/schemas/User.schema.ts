@@ -47,7 +47,7 @@ export class User {
     default: PrivacySetting.PRIVATE,
     select: false,
   })
-  email_privacy: string;
+  emailPrivacy: string;
 
   @Prop({
     type: String,
@@ -55,7 +55,7 @@ export class User {
     default: PrivacySetting.PRIVATE,
     select: false,
   })
-  phone_privacy: string;
+  phonePrivacy: string;
   // flags hidden
 
   @Prop({
