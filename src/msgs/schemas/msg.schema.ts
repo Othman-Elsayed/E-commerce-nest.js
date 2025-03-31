@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { ImgType, VideoType } from '@utils/types';
 import mongoose, { Types } from 'mongoose';
 
 @Schema({
@@ -36,6 +37,26 @@ export class Message {
     ref: 'Message',
   })
   replays: Types.ObjectId[];
+
+  @Prop({
+    type: String,
+  })
+  text: string;
+
+  @Prop({
+    type: Object,
+  })
+  imgs: ImgType[];
+
+  @Prop({
+    type: Object,
+  })
+  videos: VideoType[];
+
+  @Prop({
+    type: String,
+  })
+  record: string;
 
   @Prop({
     type: Boolean,

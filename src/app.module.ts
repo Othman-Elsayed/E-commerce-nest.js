@@ -9,6 +9,7 @@ import { PostModule } from './posts/post.module';
 import { CommentModule } from './comments/comment.module';
 import { FriendsModule } from './friends/friends.module';
 import { GroupModule } from './groups/group.module';
+import { MsgModule } from './msgs/msg.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { GroupModule } from './groups/group.module';
     CommentModule,
     FriendsModule,
     GroupModule,
+    MsgModule,
   ],
   controllers: [AppController],
   providers: [AppService],

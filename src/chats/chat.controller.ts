@@ -16,29 +16,29 @@ import { VerifyRoles } from '@auth/guards/verify-roles.guard';
 import { CreateChatDto } from './dtos/create-chat.dto';
 import { ValidateMongoId } from '@pipes/validate-mongo.id.pipe';
 
-@Controller()
+@Controller('chats')
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
-  @Get('admin/chats')
+  @Get('admin')
   @RolesDecorator(RolesType.ADMIN)
   @UseGuards(VerifyRoles)
   getAllChatsByAdmin() {
     return this.chatService.findAllChatsForAdmin();
   }
 
-  @Get('chats')
+  @Get()
   @UseGuards(VerifyToken)
   getMyChats(@Request() req: any) {
     return this.chatService.findMyChats(req.user);
   }
 
-  @Post('chat')
+  @Post()
   @UseGuards(VerifyToken)
   create(@Body() dto: CreateChatDto) {
     return this.chatService.createChat(dto);
   }
 
-  @Delete('chat')
+  @Delete()
   @UseGuards(VerifyToken)
   delete(@Query('chatId', ValidateMongoId) chatId: string) {
     return this.chatService.removeChat(chatId);

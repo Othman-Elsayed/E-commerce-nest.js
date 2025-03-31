@@ -15,7 +15,7 @@ import { ValidateMongoId } from '@pipes/validate-mongo.id.pipe';
 export class GroupController {
   constructor(private readonly groupService: GroupService) {}
 
-  @Post('create')
+  @Post()
   @UseGuards(VerifyToken)
   create(@Body() dto: CreateGroupDto, @Request() req: any) {
     return this.groupService.createGroup(dto, req.user);

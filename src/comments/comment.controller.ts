@@ -18,40 +18,40 @@ import { RolesDecorator } from '@auth/decorator/roles.decorator';
 import { RolesType } from '@utils/constants';
 import { VerifyRoles } from '@auth/guards/verify-roles.guard';
 
-@Controller()
+@Controller('comments')
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-  @Get('admin/comments')
+  @Get('admin')
   @RolesDecorator(RolesType.ADMIN)
   @UseGuards(VerifyRoles)
   getCommentsForAdmin() {
     return this.commentService.findCommentsForAdmin();
   }
 
-  @Get('comments')
-  getComments(@Query('postId', ValidateMongoId) post: string) {
-    return this.commentService.findComments({ post: post });
-  }
-
-  @Get('comment')
+  @Get('one')
   getComment(@Query('_id', ValidateMongoId) _id: string) {
     return this.commentService.findComment({ _id });
   }
 
-  @Post('comment')
+  @Get()
+  getComments(@Query('postId', ValidateMongoId) post: string) {
+    return this.commentService.findComments({ post: post });
+  }
+
+  @Post()
   @UseGuards(VerifyToken)
   createComment(@Body() dto: CreateCommentDto, @Request() req: any) {
     return this.commentService.addComment(dto, req.user);
   }
 
-  @Put('comment')
+  @Put()
   @UseGuards(VerifyToken)
   updateComment(@Body() dto: UpdateCommentDto, @Request() req: any) {
     return this.commentService.editComment(dto, req.user);
   }
 
-  @Delete('comment')
+  @Delete()
   @UseGuards(VerifyToken)
   removeComment(
     @Query('_id', ValidateMongoId) _id: string,
