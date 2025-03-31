@@ -1,5 +1,9 @@
 import { omit } from 'lodash';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Chat } from './schemas/Chat.schema';
 import { Model } from 'mongoose';
@@ -27,12 +31,19 @@ export class ChatService {
     return chats.map((chat) => omit(chat, ['__v']));
   }
 
+  async findChat(filter: any) {
+    const findChat = await this.chatModel.findOne(filter).lean();
+    if (!findChat) throw new NotFoundException('chat not found');
+    return findChat;
+  }
+
   async createChat(dto: CreateChatDto) {
     const chat = await this.chatModel.create(dto);
+    if (!chat) return new InternalServerErrorException('failed to create.');
     return chat;
   }
 
-  async updateChat(dto: UpdateChatDto) {
+  async updateChat(dto: any) {
     const chat = await this.chatModel.findByIdAndUpdate(dto._id, dto, {
       new: true,
     });

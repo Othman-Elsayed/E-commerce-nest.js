@@ -3,7 +3,7 @@ import { IsBoolean, IsMongoId, IsNotEmpty, IsOptional } from 'class-validator';
 export class CreateChatDto {
   @IsNotEmpty()
   @IsMongoId({ each: true })
-  members: [];
+  members: string[];
 
   @IsOptional()
   @IsMongoId()

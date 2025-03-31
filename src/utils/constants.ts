@@ -9,6 +9,12 @@ enum PrivacySetting {
   PRIVATE = 'PRIVATE',
 }
 
+enum PrivacyGroup {
+  PUBLIC = 'PUBLIC',
+  FRIENDS_ONLY = 'FRIENDS_ONLY',
+  PRIVATE = 'PRIVATE',
+}
+
 const ROLES_KEY = 'roles';
 
 export { RolesType, PrivacySetting, ROLES_KEY };
