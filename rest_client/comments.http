@@ -1,38 +1,39 @@
 @baseUrl = http://localhost:27018
 @token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U5ZjQ0MDllYzM5ZTFjNGQ5ZTI1YTUiLCJpYXQiOjE3NDMzODU2NjQsImV4cCI6MTc0MzQ3MjA2NH0.u2plo7aBehlJJqhLpxmfRcAUYyS5svT8VSUXihVt0kw
 
-### - Get all posts users
-GET {{baseUrl}}/posts_for_admin
+### - Get all comments for admin
+GET {{baseUrl}}/admin/comments
 Content-Type: application/json
 Authorization: {{token}}
 
-### - Get all posts user 
-GET {{baseUrl}}/posts_user?user=67e9f4409ec39e1c4d9e25a5
+### - Get all comments by post 
+GET {{baseUrl}}/comments?postId=67ea0e79c71d0a25324bbcc1
 
-### - Get one post details
-GET {{baseUrl}}/post_details?_id=67ea0e79c71d0a25324bbcc1
+### - Get one single comment
+GET {{baseUrl}}/comment?_id=67ea11378e6c235ab1c40c46
 Content-Type: application/json
 
-### - Create post 
-POST {{baseUrl}}/create_post
+### - Create comment 
+POST {{baseUrl}}/comment
 Content-Type: application/json
 Authorization: {{token}}
 
 {  
-    "text": "new post"
+    "post": "67ea0e79c71d0a25324bbcc1",
+    "text": "comment 02"
 }
 
-### - Update post
-Put {{baseUrl}}/update_post
+### - Update comment
+Put {{baseUrl}}/comment
 Content-Type: application/json
 Authorization: {{token}}
 
 {
-    "_id": "67e9f62a086b25c24b92b811",
+    "_id": "67ea12f38e8b980d461294a6",
     "text": "124124"
 }
   
-### - Remove post
-DELETE  {{baseUrl}}/remove_post?_id=67e9f93ba6db95a094b7df0a
+### - Remove comment
+DELETE  {{baseUrl}}/comment?_id=67ea12f38e8b980d461294a6
 Content-Type: application/json
 Authorization: {{token}} 

@@ -25,10 +25,10 @@ export class Post {
   likes: Types.ObjectId[];
 
   @Prop({
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: 'Comment',
+    type: Number,
+    default: 0,
   })
-  comments: Types.ObjectId[];
+  comments: number;
 
   @Prop({
     type: String,

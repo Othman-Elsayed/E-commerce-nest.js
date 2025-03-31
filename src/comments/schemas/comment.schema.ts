@@ -17,15 +17,21 @@ export class Comment {
   user: Types.ObjectId;
 
   @Prop({
-    type: String,
-  })
-  text: string;
-
-  @Prop({
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'User',
   })
   likes: Types.ObjectId[];
+
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Post',
+  })
+  post: Types.ObjectId;
+
+  @Prop({
+    type: String,
+  })
+  text: string;
 
   @Prop({
     type: [mongoose.Schema.Types.ObjectId],
