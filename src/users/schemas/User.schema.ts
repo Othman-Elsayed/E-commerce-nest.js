@@ -40,12 +40,12 @@ export class User {
     select: false,
   })
   password: string;
-  // flags hidden
 
   @Prop({
     type: String,
     enum: PrivacySetting,
     default: PrivacySetting.PRIVATE,
+    select: false,
   })
   email_privacy: string;
 
@@ -53,11 +53,12 @@ export class User {
     type: String,
     enum: PrivacySetting,
     default: PrivacySetting.PRIVATE,
+    select: false,
   })
   phone_privacy: string;
+  // flags hidden
 
   @Prop({
-    type: String,
     enum: RolesType,
     default: RolesType.USER,
   })
@@ -93,9 +94,16 @@ export class User {
   isVerified: boolean;
 
   @Prop({
-    type: String,
+    type: Number,
+    default: 0,
   })
-  country: string;
+  followers: number;
+
+  @Prop({
+    type: Number,
+    default: 0,
+  })
+  following: number;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

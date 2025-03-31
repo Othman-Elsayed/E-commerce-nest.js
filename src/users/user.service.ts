@@ -1,3 +1,4 @@
+import { omit } from 'lodash';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/User.schema';
@@ -14,7 +15,9 @@ export class UserService {
   ) {}
 
   async findAll() {
-    const users = await this.userModel.find();
+    const users = (await this.userModel.find().lean()).map((u) =>
+      omit(u, ['__v']),
+    );
     return users;
   }
 
@@ -23,7 +26,7 @@ export class UserService {
     if (roles?.includes(RolesType.ADMIN)) {
       user = await this.userModel
         .findOne(filter)
-        .select('+password +email +phoneNumber');
+        .select('+password +email +phoneNumber +email_privacy +phone_privacy');
     } else {
       user = await this.userModel.findOne(filter);
     }

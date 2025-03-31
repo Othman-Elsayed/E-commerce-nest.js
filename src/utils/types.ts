@@ -3,4 +3,9 @@ type ImgType = {
   url: string;
 };
 
-export { ImgType };
+type VideoType = {
+  public_id: string;
+  url: string;
+};
+
+export { ImgType, VideoType };

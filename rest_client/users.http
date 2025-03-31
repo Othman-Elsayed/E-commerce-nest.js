@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:27018
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U4YTY4ZTUwMDEyMmQwNGU2NmUxNjIiLCJpYXQiOjE3NDMzMDA0NTksImV4cCI6MTc0MzM4Njg1OX0.mGAe3VD6zdoWKiN4H0kuS6KgqXoi3c10NjbLVdJO2Go 
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U4YTY4ZTUwMDEyMmQwNGU2NmUxNjIiLCJpYXQiOjE3NDMzNjg2MzcsImV4cCI6MTc0MzQ1NTAzN30.b6hdj--BiIm3TKaPS4Pmi2ufAh-CNjhskwNbOibCg1U
 
 ### - Get all users 
 GET {{baseUrl}}/users
@@ -7,7 +7,7 @@ Content-Type: application/json
 Authorization: {{token}}
 
 ### - Get single user
-GET {{baseUrl}}/user?_id=67e89fa4b3cc63e8dbba0bc8
+GET {{baseUrl}}/user?_id=67e9f4409ec39e1c4d9e25a5
 Content-Type: application/json
 Authorization: {{token}}
 
@@ -16,10 +16,10 @@ POST {{baseUrl}}/register
 Content-Type: application/json
 
 {
-    "name": "5",
+    "name": "1",
     "phoneNumber": "+20 1214144124",
     "country": "egypt",
-    "email": "5@gmail.com",
+    "email": "1@gmail.com",
     "password": "123456"
 }
 

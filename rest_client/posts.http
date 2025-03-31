@@ -1,0 +1,38 @@
+@baseUrl = http://localhost:27018
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2U5ZjQ0MDllYzM5ZTFjNGQ5ZTI1YTUiLCJpYXQiOjE3NDMzODU2NjQsImV4cCI6MTc0MzQ3MjA2NH0.u2plo7aBehlJJqhLpxmfRcAUYyS5svT8VSUXihVt0kw
+
+### - Get all posts users
+GET {{baseUrl}}/posts_for_admin
+Content-Type: application/json
+Authorization: {{token}}
+
+### - Get all posts user 
+GET {{baseUrl}}/posts_user?user=67e9f4409ec39e1c4d9e25a5
+
+### - Get one post details
+GET {{baseUrl}}/post_details?_id=67e9f4409ec39e1c4d9e25a5
+Content-Type: application/json
+
+### - Create post 
+POST {{baseUrl}}/create_post
+Content-Type: application/json
+Authorization: {{token}}
+
+{  
+    "text": "new post"
+}
+
+### - Update post
+Put {{baseUrl}}/update_post
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+    "_id": "67e9f62a086b25c24b92b811",
+    "text": "124124"
+}
+  
+### - Remove post
+DELETE  {{baseUrl}}/remove_post?_id=67e9f93ba6db95a094b7df0a
+Content-Type: application/json
+Authorization: {{token}} 

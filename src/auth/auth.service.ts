@@ -20,10 +20,10 @@ export class AuthService {
     const findUser: any = await this.userService.findOne({ email: dto.email });
     if (findUser) throw new NotFoundException('this user already exist');
 
-    const newUser = await this.userService.create(dto);
+    const newUser: any = await this.userService.create(dto);
     const access_token = await this.generateToken({ _id: newUser._id });
 
-    return { newUser, access_token };
+    return { ...newUser._doc, access_token, __v: undefined };
   }
 
   async login(dto: LoginDto) {

@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from './users/user.module';
 import { AuthModule } from './auth/auth.module';
+import { PostModule } from './posts/post.module';
 
 @Module({
   imports: [
@@ -18,8 +19,9 @@ import { AuthModule } from './auth/auth.module';
         uri: config.get<string>('MANGO_DB'),
       }),
     }),
-    UserModule,
     AuthModule,
+    UserModule,
+    PostModule,
   ],
   controllers: [AppController],
   providers: [AppService],
