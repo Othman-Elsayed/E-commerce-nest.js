@@ -1,5 +1,4 @@
 import { Type } from 'class-transformer';
-import { UserGender, UserRole } from '../types/user';
 import {
   IsEmail,
   IsEnum,
@@ -12,7 +11,8 @@ import {
   Min,
   ValidateNested,
 } from 'class-validator';
-import { UserAvatarDto } from './user-avatar.dto';
+import { UserAvatarDto } from '@shared/dtos/avatar.dto';
+import { UserGender, UserRole } from '@shared/types/user';
 
 export class CreateUserDto {
   // required fields

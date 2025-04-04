@@ -20,6 +20,7 @@
     "paths": {
       "@utils/*": ["src/utils/*"],
       "@auth/*": ["src/auth/*"],
+      "@shared/*": ["src/shared/*"],
       "@pipes/*": ["src/pipes/*"]
     }
   }
