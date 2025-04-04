@@ -1,35 +1,21 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { UserModule } from './users/user.module';
-import { AuthModule } from './auth/auth.module';
-import { PostModule } from './posts/post.module';
-import { CommentModule } from './comments/comment.module';
-import { FriendsModule } from './friends/friends.module';
-import { GroupModule } from './groups/group.module';
-import { MsgModule } from './msgs/msg.module';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: '.env',
+      envFilePath: ['.env'],
     }),
     MongooseModule.forRootAsync({
+      imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        uri: config.get<string>('MANGO_DB'),
+      useFactory: (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGO_URI'),
       }),
     }),
-    AuthModule,
-    UserModule,
-    PostModule,
-    CommentModule,
-    FriendsModule,
-    GroupModule,
-    MsgModule,
   ],
   controllers: [AppController],
   providers: [AppService],

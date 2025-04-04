@@ -18,9 +18,9 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@utils/*": ["src/utils/*"],
       "@auth/*": ["src/auth/*"],
-      "@pipes/*": ["src/pipes/*"]
+      "@utils/*": ["src/common/utils/*"],
+      "@pipes/*": ["src/common/pipes/*"]
     }
   }
 }
