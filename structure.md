@@ -1,4 +1,4 @@
-# 🛒 OTHMAN - NestJS eCommerce Project Structure
+# 🛒 NestJS eCommerce Project Structure
 
 This document describes a clean, modular folder structure for building a scalable and professional **eCommerce backend** using **NestJS**.
 

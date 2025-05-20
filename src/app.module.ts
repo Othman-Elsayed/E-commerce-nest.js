@@ -1,9 +1,12 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './database/database.module';
 import { validationSchema } from './config/jwt.config';
+import { AdminModule } from './modules/admin/admin.module';
+import { AuthModule } from './modules/auth/auth.module';
+
 import configuration from './config/configuration';
 import databaseConfig from './config/database.config';
 
@@ -15,8 +18,9 @@ import databaseConfig from './config/database.config';
       load: [configuration, databaseConfig],
       validationSchema: validationSchema,
     }),
-
     DatabaseModule,
+    AuthModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],
