@@ -1,0 +1,20 @@
+{
+  "users": {
+    "retrieved": "Users fetch successfully",
+    "created": "User created successfully",
+    "deleted": "User deleted successfully",
+    "updated": "User Updated successfully"
+  },
+  "otp": {
+    "sent": "OTP has been sent",
+    "verify": "OTP verified successfully",
+    "invalid": "The OTP is invalid",
+    "expired": "The OTP has expired",
+    "yourOTPCode": "Your OTP Code",
+    "welcomeMsg": "Hi",
+    "subWelcomeMsg": "Here's your verification code"
+  },
+  "required": {
+    "email": "Email is required"
+  }
+}

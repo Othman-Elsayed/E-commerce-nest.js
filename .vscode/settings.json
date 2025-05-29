@@ -1,5 +1,5 @@
 {
-  "cSpell.words": ["dtos"],
+  "cSpell.words": ["dtos", "maxlength"],
   "rest-client.environmentVariables": {
     "$shared": {
       "version": "v1"
