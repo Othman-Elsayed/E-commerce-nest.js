@@ -3,12 +3,21 @@ import {
   Catch,
   ArgumentsHost,
   BadRequestException,
+  NotFoundException,
+  InternalServerErrorException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { I18nValidationException, I18nService } from 'nestjs-i18n';
 import { Inject } from '@nestjs/common';
 
-@Catch(BadRequestException, I18nValidationException)
+@Catch(
+  BadRequestException,
+  NotFoundException,
+  InternalServerErrorException,
+  I18nValidationException,
+  ForbiddenException,
+)
 export class I18nValidationExceptionFilter implements ExceptionFilter {
   constructor(@Inject(I18nService) private readonly i18n: I18nService) {}
 
@@ -41,40 +50,18 @@ export class I18nValidationExceptionFilter implements ExceptionFilter {
           }
         }
       }
-    } else if (exception instanceof BadRequestException) {
+    } else {
       const exceptionResponse = exception.getResponse();
-
-      if (
-        typeof exceptionResponse === 'object' &&
-        exceptionResponse !== null &&
-        Array.isArray((exceptionResponse as any).message)
-      ) {
-        const validationErrors = (exceptionResponse as any).message;
-
-        for (const err of validationErrors) {
-          if (typeof err.property === 'string' && err.constraints) {
-            const firstConstraint = Object.values(err.constraints)[0];
-            if (typeof firstConstraint === 'string') {
-              messages[err.property] = firstConstraint;
-            }
-          }
-        }
-
-        error = (exceptionResponse as any).error || 'Bad Request';
-      } else if (typeof exceptionResponse === 'string') {
-        messages['error'] = exceptionResponse;
-      } else {
-        messages['error'] = 'Bad Request';
-      }
-    }
-
-    if (Object.keys(messages).length === 0) {
-      messages['error'] = 'Bad Request';
+      // const [key] = (exceptionResponse as any).message
+      //   ?.split(' ')
+      //   ?.map((el) => el?.toString()?.toLowerCase());
+      messages['generic'] = (exceptionResponse as any).message;
     }
 
     response.status(statusCode).json({
       statusCode,
-      message: messages,
+      message: this.i18n.t('translate.errors.generic'),
+      errors: messages,
       status: error,
     });
   }

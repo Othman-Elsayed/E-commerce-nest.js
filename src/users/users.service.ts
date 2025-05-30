@@ -13,14 +13,12 @@ export class UsersService {
     return this.userRepository.create(dto);
   }
   public editUser(userId: string, dto: UpdateUserDto) {
-    return this.userRepository.edit(userId, dto);
+    return this.userRepository.edit({
+      filter: { _id: userId },
+      payload: dto,
+    });
   }
   public removeUser(userId: string) {
     return this.userRepository.remove(userId);
   }
 }
-// {
-//     "message": "asffff",
-//     "error": "Not Found",
-//     "statusCode": 404
-// }

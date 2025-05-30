@@ -1,46 +1,68 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import * as nodemailer from 'nodemailer';
-import { Otp } from '../mail/schemas/otp.schema';
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
+import { TokenService } from './../shared/token/token.service';
+import { UsersRepository } from 'src/users/repository/users.repository';
+import { OtpService } from 'src/otp/otp.service';
+import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
-export class OtpService {
-  constructor(@InjectModel(Otp.name) private otpModel: Model<Otp>) {}
+export class AuthService {
+  constructor(
+    @Inject(forwardRef(() => OtpService))
+    private readonly otpService: OtpService,
+    private readonly tokenService: TokenService,
+    private readonly usersRepository: UsersRepository,
+  ) {}
 
-  async sendOtp(email: string) {
-    const code = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit OTP
-    const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
-
-    await this.otpModel.create({ email, code, expiresAt });
-
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: 'your@gmail.com',
-        pass: 'your-app-password',
-      },
+  public async register(dto: RegisterDto) {
+    const hasPassword = await bcrypt.hash(dto.password, 10);
+    await this.usersRepository.create({
+      ...dto,
+      password: hasPassword,
     });
-
-    await transporter.sendMail({
-      from: 'your@gmail.com',
-      to: email,
-      subject: 'Your OTP Code',
-      text: `Your OTP is ${code}`,
+    const otpRecord = await this.otpService.send({
+      email: dto?.email,
     });
-
-    return { message: 'OTP sent' };
+    return {
+      otpId: otpRecord.otpId,
+    };
   }
 
-  async verifyOtp(email: string, code: string) {
-    const record = await this.otpModel.findOne({ email, code });
+  public async login(dto: LoginDto) {
+    const { email, username, password } = dto;
 
-    if (!record) throw new BadRequestException('Invalid OTP');
-    if (record.expiresAt < new Date())
-      throw new BadRequestException('OTP expired');
+    if (!email && !username) {
+      throw new BadRequestException('Please enter your email or username');
+    }
 
-    await this.otpModel.deleteMany({ email }); // Cleanup
+    const user = await this.usersRepository.findOne({
+      filter: {
+        $or: [{ email }, { username }],
+      },
+      failedMsg: 'Invalid email or username',
+      select: '+phoneNumber +email +password',
+    });
 
-    return { message: 'Email verified successfully' };
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      throw new BadRequestException('Invalid email or password');
+    }
+
+    const token = await this.tokenService.generateToken({
+      userId: user._id,
+      roles: user.roles,
+    });
+
+    const { __v, password: pass, ...other } = user.toObject();
+    return {
+      token,
+      user: other,
+    };
   }
 }

@@ -2,12 +2,12 @@ import {
   Injectable,
   BadRequestException,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from '../schemas/user.schema';
-import { CreateUserDto } from '../dto/create-user.dto';
-import { UpdateUserDto } from '../dto/update-user.dto';
+import { EditOne, FindOne } from '@shared/constants';
 @Injectable()
 export class UsersRepository {
   constructor(
@@ -24,7 +24,31 @@ export class UsersRepository {
     }
   }
 
-  public async create(dto: CreateUserDto) {
+  public async findOne({ filter, select, populate, failedMsg }: FindOne) {
+    try {
+      let query = this.userModel.findOne(filter);
+
+      if (select) query = query.select(select);
+      if (populate) query = query.populate(populate);
+
+      const user = await query;
+
+      if (!user) {
+        throw new NotFoundException(
+          failedMsg || 'This account does not exist.',
+        );
+      }
+
+      return user;
+    } catch (err) {
+      if (err instanceof NotFoundException) throw err;
+      throw new InternalServerErrorException(
+        'Failed to fetch user, please try again later.',
+      );
+    }
+  }
+
+  public async create(dto: any) {
     try {
       return await this.userModel.create(dto);
     } catch (err) {
@@ -35,14 +59,24 @@ export class UsersRepository {
     }
   }
 
-  public async edit(userId: string, dto: UpdateUserDto) {
+  public async edit({ filter, payload, populate, select, failedMsg }: EditOne) {
     try {
-      return await this.userModel.findByIdAndUpdate(userId, dto, { new: true });
+      let query = this.userModel.findOneAndUpdate(filter, payload, {
+        new: true,
+      });
+      if (select) query = query.select(select);
+      if (populate) query = query.populate(populate);
+      const user = await query;
+      if (!user)
+        throw new NotFoundException(
+          failedMsg || 'This account does not exist.',
+        );
+      else return user;
     } catch (err) {
-      if (err.code === 11000) {
+      if (err instanceof NotFoundException) throw err;
+      else if (err.code === 11000)
         throw new BadRequestException('User already exists');
-      }
-      throw new InternalServerErrorException('Could not edit user');
+      else throw new BadRequestException('Could not edit user');
     }
   }
 

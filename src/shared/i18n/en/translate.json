@@ -11,10 +11,14 @@
     "invalid": "The OTP is invalid",
     "expired": "The OTP has expired",
     "yourOTPCode": "Your OTP Code",
-    "welcomeMsg": "Hi",
+    "welcomeMsg": "Welcome 👋",
     "subWelcomeMsg": "Here's your verification code"
   },
   "required": {
+    "code": "OTP code is required",
     "email": "Email is required"
+  },
+  "errors": {
+    "generic": "An unexpected error occurred. Please try again later ⚠️"
   }
 }

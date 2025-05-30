@@ -9,6 +9,8 @@ import { AppService } from './app.service';
 import { I18nValidationExceptionFilter } from '@shared/filters/http-exception.filter';
 import { MailModule } from './mail/mail.module';
 import * as path from 'path';
+import { OtpModule } from './otp/otp.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -47,6 +49,8 @@ import * as path from 'path';
     // Feature Modules
     UsersModule,
     MailModule,
+    OtpModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, I18nValidationExceptionFilter],

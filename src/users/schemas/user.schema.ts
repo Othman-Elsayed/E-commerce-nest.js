@@ -3,34 +3,34 @@ import { HydratedDocument } from 'mongoose';
 import {
   Cloudinary,
   GenderUser,
+  UserFieldLimits,
   RolesUser,
-  ViableUserInformation,
+  VisibleInfo,
 } from '@shared/constants';
 
 export type UserDocument = HydratedDocument<User>;
 
-@Schema({
-  timestamps: true,
-})
+@Schema({ timestamps: true })
 export class User {
+  /** 👤 Basic Identity */
   @Prop({
     type: String,
-    minlength: 3,
-    maxlength: 30,
     required: true,
     trim: true,
+    minlength: UserFieldLimits.minName,
+    maxlength: UserFieldLimits.maxName,
   })
   name: string;
 
   @Prop({
     type: String,
-    unique: true,
     required: true,
+    unique: true,
     lowercase: true,
     trim: true,
-    minlength: 3,
-    maxlength: 200,
-    select: false,
+    minlength: UserFieldLimits.minEmail,
+    maxlength: UserFieldLimits.maxEmail,
+    select: false, // hidden from queries
   })
   email: string;
 
@@ -38,27 +38,37 @@ export class User {
     type: String,
     unique: true,
     trim: true,
-    minlength: 3,
-    maxlength: 100,
+    minlength: UserFieldLimits.minUsername,
+    maxlength: UserFieldLimits.maxUsername,
   })
   username: string;
 
+  /** 🔒 Security */
   @Prop({
     type: String,
-    minlength: 3,
-    maxlength: 100,
     required: true,
-    select: false,
+    minlength: UserFieldLimits.minPassword,
+    maxlength: UserFieldLimits.maxPassword,
+    select: false, // hide password
+    trim: true,
   })
   password: string;
 
+  @Prop({
+    type: Boolean,
+    default: false,
+  })
+  isEmailVerified: boolean;
+
+  /** 🔗 Role & Permissions */
   @Prop({
     type: [String],
     enum: RolesUser,
     default: [RolesUser.USER],
   })
-  role: RolesUser[];
+  roles: RolesUser[];
 
+  /** 🖼️ Profile */
   @Prop({
     type: {
       uri: { type: String },
@@ -70,29 +80,22 @@ export class User {
 
   @Prop({
     type: Number,
-    min: 0,
-    max: 100,
+    min: UserFieldLimits.minAge,
+    max: UserFieldLimits.maxAge,
   })
   age: number;
 
   @Prop({
     type: String,
-    length: 11,
-    select: false,
+    enum: GenderUser,
+    default: GenderUser.NONE,
   })
-  phoneNumber: string;
+  gender: GenderUser;
 
   @Prop({
     type: String,
-    enum: ViableUserInformation,
-    default: ViableUserInformation.none,
-    select: false,
-  })
-  visibleInfo: ViableUserInformation;
-
-  @Prop({
-    type: String,
-    maxlength: 255,
+    maxlength: UserFieldLimits.maxAddress,
+    trim: true,
   })
   address: string;
 
@@ -102,17 +105,28 @@ export class User {
   })
   active: boolean;
 
+  /** ☎️ Contact (Private Info) */
   @Prop({
     type: String,
+    length: UserFieldLimits.maxPhone,
     select: false,
+    trim: true,
   })
-  verificationCode: string;
+  phoneNumber: string;
 
   @Prop({
-    type: String,
-    enum: GenderUser,
+    type: Object,
+    default: {
+      email: false, // hide
+      phoneNumber: false, // hide
+      avatar: true, // show
+      bio: true, // show
+      age: true, // show
+      address: true, // show
+      lastSeen: true, // show
+    },
   })
-  gender: GenderUser;
+  visibleInfo: VisibleInfo;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
