@@ -5,11 +5,7 @@ export class LoginDto {
   @IsNotEmpty()
   password: string;
 
-  @IsOptional()
   @IsString()
-  username?: string;
-
-  @IsOptional()
-  @IsString()
-  email?: string;
+  @IsNotEmpty()
+  email: string;
 }

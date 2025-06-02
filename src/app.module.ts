@@ -8,9 +8,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { I18nValidationExceptionFilter } from '@shared/filters/http-exception.filter';
 import { MailModule } from './mail/mail.module';
-import * as path from 'path';
 import { OtpModule } from './otp/otp.module';
 import { AuthModule } from './auth/auth.module';
+import * as path from 'path';
 
 @Module({
   imports: [

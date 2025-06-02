@@ -3,10 +3,9 @@ import {
   GenderUser,
   RolesUser,
   UserFieldLimits,
-  VisibleInfo,
 } from '@shared/constants';
 import { CloudinaryDto } from '@shared/dto/cloudinary.dto';
-import { VisibleInfoDto } from '@shared/dto/visible-info.dto';
+import { IsNonEmptyObject } from '@shared/pipes/is-not-empty-object.pipe';
 import { Type } from 'class-transformer';
 import {
   IsEnum,
@@ -51,6 +50,7 @@ export class RegisterDto {
   roles?: string;
 
   @IsOptional()
+  @IsNonEmptyObject({ message: 'Avatar cannot be empty object' })
   @ValidateNested()
   @Type(() => CloudinaryDto)
   avatar?: Cloudinary;
@@ -73,9 +73,4 @@ export class RegisterDto {
   @IsString()
   @Length(UserFieldLimits.maxPhone)
   phoneNumber?: string;
-
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => VisibleInfoDto)
-  visibleInfo?: VisibleInfo;
 }

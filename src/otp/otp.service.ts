@@ -12,21 +12,19 @@ import { SendOtpDto } from '../otp/dto/send-otp.dto';
 import { VerifyOtp } from '../otp/dto/verify-otp.dto';
 import { UsersRepository } from 'src/users/repository/users.repository';
 import { ConfigService } from '@nestjs/config';
-import { TokenService } from '@shared/token/token.service';
 import * as bcrypt from 'bcryptjs';
 @Injectable()
 export class OtpService {
   constructor(
     @InjectModel(Otp.name) private otpModel: Model<Otp>,
-    private readonly tokenService: TokenService,
     private readonly mailService: MailService,
     private readonly configService: ConfigService,
     private readonly usersRepository: UsersRepository,
     private readonly i18n: I18nService,
   ) {}
 
-  async send(dto: SendOtpDto) {
-    const { email } = dto;
+  public async send(dto: SendOtpDto) {
+    const { email, typeSend, verificationLink } = dto;
     const user = await this.usersRepository.findOne({
       filter: { email },
       failedMsg: 'Please create an account first.',
@@ -61,13 +59,25 @@ export class OtpService {
       expiresAt,
     });
 
-    this.mailService.sendOtp(email, code);
+    const payloadSend = {
+      email,
+      code,
+      username: user?.name,
+      verificationLink,
+    };
+
+    if (typeSend === 'forgetPass') {
+      this.mailService.forgetPassword(payloadSend);
+    } else {
+      this.mailService.sendOtp(payloadSend);
+    }
+
     return {
       otpId: otpCreated?._id?.toString(),
     };
   }
 
-  async verify(dto: VerifyOtp) {
+  public async verify(dto: VerifyOtp) {
     const { otpCode, otpId } = dto;
     const recordOtp = await this.otpModel.findOne({ _id: otpId });
 
@@ -91,19 +101,21 @@ export class OtpService {
 
     await this.otpModel.deleteMany({ _id: otpId });
 
-    const user = await this.usersRepository.edit({
-      filter: { _id: recordOtp?.userId },
-      payload: { isEmailVerified: true },
-      select: '+email +phoneNumber',
-    });
-    const token = await this.tokenService.generateToken({
-      userId: user._id,
-      roles: user.roles,
-    });
-    const { password, ...other } = user.toObject();
-    return {
-      token,
-      user: other,
-    };
+    return recordOtp;
+
+    // const user = await this.usersRepository.edit({
+    //   filter: { _id: recordOtp?.userId },
+    //   payload: { isEmailVerified: true },
+    //   select: '+email +phoneNumber',
+    // });
+    // const token = await this.tokenService.generateToken({
+    //   userId: user._id,
+    //   roles: user.roles,
+    // });
+    // const { password, ...other } = user.toObject();
+    // return {
+    //   token,
+    //   user: other,
+    // };
   }
 }

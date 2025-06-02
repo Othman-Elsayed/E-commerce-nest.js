@@ -2,6 +2,8 @@ enum RolesUser {
   USER = 'USER',
   ADMIN = 'ADMIN',
   SUPER_ADMIN = 'SUPER_ADMIN',
+  CUSTOMER = 'CUSTOMER',
+  SELLER = 'SELLER',
 }
 
 interface VisibleInfo {

@@ -12,7 +12,25 @@
     "expired": "The OTP has expired",
     "yourOTPCode": "Your OTP Code",
     "welcomeMsg": "Welcome 👋",
-    "subWelcomeMsg": "Here's your verification code"
+    "subWelcomeMsg": "Here's your verification code",
+    "passResetReq": "Password Reset Request",
+    "weReceived": "We received a request to reset your password.",
+    "ignoreReq": "If you did not request a password reset, please ignore this email. Otherwise, use the code below to reset your password.",
+    "expireCode": "This code is valid for 2 minutes. Please do not share it with anyone."
+  },
+  "ejs": {
+    "welcome": "Welcome",
+    "thankYouForRegistering": "Thank you for registering! To complete your account setup, please verify your email address.",
+    "yourVerificationCode": "Your verification code: ",
+    "enterThisCodeInYourApp": "enter this code in your app",
+    "thisCodeWillExpireIn": "This code will expire in 15 minutes",
+    "orClickButtonVerifyMyAccount": "orClickButtonVerifyMyAccount",
+    "verifyMyAccount": "Verify My Account",
+    "note": "Note: ",
+    "noteIgnoreThisEmail": "If you didn't create an account with us, please ignore this email.",
+    "needHelp": "Need help?",
+    "contactOurSupportTeam": "Contact our support team ",
+    "othnixAllRightsReserved": "Othnix All rights reserved."
   },
   "required": {
     "code": "OTP code is required",

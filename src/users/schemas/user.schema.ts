@@ -60,6 +60,18 @@ export class User {
   })
   isEmailVerified: boolean;
 
+  @Prop({
+    type: Boolean,
+    default: false,
+  })
+  isReqForgetPassVerified: boolean;
+
+  @Prop({
+    type: Boolean,
+    default: false,
+  })
+  is2FA: boolean;
+
   /** 🔗 Role & Permissions */
   @Prop({
     type: [String],

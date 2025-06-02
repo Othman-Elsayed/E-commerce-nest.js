@@ -1,49 +1,81 @@
-import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
-import { readFile } from 'fs/promises';
-import * as nodemailer from 'nodemailer';
-import * as ejs from 'ejs';
-import * as path from 'path';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class MailService {
   constructor(
-    private readonly configService: ConfigService,
     private readonly i18n: I18nService,
+    private readonly mailerService: MailerService,
   ) {}
 
-  async sendOtp(email: string, code: string) {
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: this.configService.get<string>('SMTP_USERNAME'),
-        pass: this.configService.get<string>('SMTP_PASSWORD'),
+  public async safeSendMail(mailOptions: any) {
+    try {
+      await this.mailerService.sendMail(mailOptions);
+    } catch (err) {
+      console.log('err send email', err);
+    }
+  }
+
+  public async sendOtp({ name, email, code }: any) {
+    const msgs = {
+      welcome: this.i18n.t('translate.ejs.welcome'),
+      thankYouForRegistering: this.i18n.t(
+        'translate.ejs.thankYouForRegistering',
+      ),
+      yourVerificationCode: this.i18n.t('translate.ejs.yourVerificationCode'),
+      enterThisCodeInYourApp: this.i18n.t(
+        'translate.ejs.enterThisCodeInYourApp',
+      ),
+      thisCodeWillExpireIn: this.i18n.t('translate.ejs.thisCodeWillExpireIn'),
+      orClickButtonVerifyMyAccount: this.i18n.t(
+        'translate.ejs.orClickButtonVerifyMyAccount',
+      ),
+      verifyMyAccount: this.i18n.t('translate.ejs.verifyMyAccount'),
+      note: this.i18n.t('translate.ejs.note'),
+      noteIgnoreThisEmail: this.i18n.t('translate.ejs.noteIgnoreThisEmail'),
+      needHelp: this.i18n.t('translate.ejs.needHelp'),
+      contactOurSupportTeam: this.i18n.t('translate.ejs.contactOurSupportTeam'),
+      othnixAllRightsReserved: this.i18n.t(
+        'translate.ejs.othnixAllRightsReserved',
+      ),
+    };
+
+    await this.safeSendMail({
+      to: email,
+      from: '"Othnix" <no-reply@thesabisway.com>',
+      subject: 'Othnix - Email Verification',
+      template: 'otp',
+      context: {
+        username: name,
+        verificationCode: code,
+        msgs,
       },
     });
-
-    // Load and render EJS template
-    const templatePath = path.join(__dirname, 'templates', 'otp.ejs');
-    const template = await readFile(templatePath, 'utf8');
-    const message = this.i18n.t('translate.otp.yourOTPCode');
-    const welcomeMsg = `${this.i18n.t('translate.otp.welcomeMsg')}`;
-    const subWelcomeMsg = this.i18n.t('translate.otp.subWelcomeMsg');
-
-    const html = ejs.render(template, {
-      message,
-      code,
-      welcomeMsg,
-      subWelcomeMsg,
-    });
-
-    await transporter.sendMail({
-      from: this.configService.get<string>('SMTP_USERNAME'),
-      to: email,
-      subject: message,
-      text: `${message} ${code}`,
-      html,
-    });
-
     return; // Success OTP;
+  }
+
+  public async forgetPassword({ email, code, username }: any) {
+    const passResetReq = this.i18n.t('translate.otp.passResetReq'),
+      weReceived = this.i18n.t('translate.otp.weReceived'),
+      ignoreReq = this.i18n.t('translate.otp.ignoreReq'),
+      expireCode = this.i18n.t('translate.otp.expireCode');
+
+    await this.safeSendMail({
+      to: email,
+      from: '"Othnix" <no-reply@thesabisway.com>',
+      subject: 'Othnix - Forget Password',
+      template: 'forget-password',
+      context: {
+        msgs: {
+          passResetReq,
+          weReceived,
+          ignoreReq,
+          expireCode,
+        },
+        code,
+        username,
+      },
+    });
   }
 }

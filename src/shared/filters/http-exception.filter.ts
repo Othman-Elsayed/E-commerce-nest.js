@@ -34,28 +34,20 @@ export class I18nValidationExceptionFilter implements ExceptionFilter {
     let error = 'Bad Request';
 
     if (exception instanceof I18nValidationException) {
+      const lang = (request as any).i18nLang || 'en';
       const validationErrors = exception.errors;
 
-      for (const err of validationErrors) {
-        if (typeof err.property === 'string' && err.constraints) {
-          for (const key of Object.values(err.constraints)) {
-            const [msgKey, argsString] = key.split('|');
-            const args = argsString ? JSON.parse(argsString || '{}') : {};
-            const translated = await this.i18n.translate(msgKey, {
-              lang: (request as any).i18nLang || 'en',
-              args,
-            });
-            messages[err.property] = translated as string;
-            break;
-          }
-        }
-      }
+      const extractedMessages = await this.extractValidationMessages(
+        validationErrors,
+        lang,
+      );
+      Object.assign(messages, extractedMessages);
     } else {
       const exceptionResponse = exception.getResponse();
-      // const [key] = (exceptionResponse as any).message
-      //   ?.split(' ')
-      //   ?.map((el) => el?.toString()?.toLowerCase());
-      messages['generic'] = (exceptionResponse as any).message;
+      messages['generic'] =
+        typeof exceptionResponse === 'object'
+          ? (exceptionResponse as any).message
+          : exceptionResponse;
     }
 
     response.status(statusCode).json({
@@ -64,5 +56,43 @@ export class I18nValidationExceptionFilter implements ExceptionFilter {
       errors: messages,
       status: error,
     });
+  }
+
+  private async extractValidationMessages(
+    errors: any[],
+    lang: string,
+    parentPath = '',
+  ): Promise<Record<string, string>> {
+    const messages: Record<string, string> = {};
+
+    for (const err of errors) {
+      const currentPath = parentPath
+        ? `${parentPath}.${err.property}`
+        : err.property;
+
+      if (err.constraints) {
+        for (const key of Object.values(err.constraints)) {
+          const [msgKey, argsString] = String(key).split('|');
+          const args = argsString ? JSON.parse(argsString || '{}') : {};
+          const translated = await this.i18n.translate(msgKey, {
+            lang,
+            args,
+          });
+          messages[currentPath] = translated as string;
+          break;
+        }
+      }
+
+      if (err.children && err.children.length > 0) {
+        const childMessages = await this.extractValidationMessages(
+          err.children,
+          lang,
+          currentPath,
+        );
+        Object.assign(messages, childMessages);
+      }
+    }
+
+    return messages;
   }
 }
