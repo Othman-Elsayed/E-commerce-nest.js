@@ -24,7 +24,7 @@ export class OtpService {
   ) {}
 
   public async send(dto: SendOtpDto) {
-    const { email, typeSend, verificationLink } = dto;
+    const { email, typeSend } = dto;
     const user = await this.usersRepository.findOne({
       filter: { email },
       failedMsg: 'Please create an account first.',
@@ -63,7 +63,6 @@ export class OtpService {
       email,
       code,
       username: user?.name,
-      verificationLink,
     };
 
     if (typeSend === 'forgetPass') {
@@ -102,20 +101,5 @@ export class OtpService {
     await this.otpModel.deleteMany({ _id: otpId });
 
     return recordOtp;
-
-    // const user = await this.usersRepository.edit({
-    //   filter: { _id: recordOtp?.userId },
-    //   payload: { isEmailVerified: true },
-    //   select: '+email +phoneNumber',
-    // });
-    // const token = await this.tokenService.generateToken({
-    //   userId: user._id,
-    //   roles: user.roles,
-    // });
-    // const { password, ...other } = user.toObject();
-    // return {
-    //   token,
-    //   user: other,
-    // };
   }
 }

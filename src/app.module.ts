@@ -11,6 +11,7 @@ import { MailModule } from './mail/mail.module';
 import { OtpModule } from './otp/otp.module';
 import { AuthModule } from './auth/auth.module';
 import * as path from 'path';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import * as path from 'path';
     MailModule,
     OtpModule,
     AuthModule,
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService, I18nValidationExceptionFilter],

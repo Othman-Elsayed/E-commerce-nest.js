@@ -38,5 +38,11 @@
   },
   "errors": {
     "generic": "An unexpected error occurred. Please try again later ⚠️"
+  },
+  "categories": {
+    "findAll": "Fetch categories successfully",
+    "remove": "Removed category successfully",
+    "update": "Updated category successfully",
+    "create": "Created category successfully"
   }
 }

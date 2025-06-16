@@ -34,6 +34,12 @@ interface FindOne {
   failedMsg?: string;
 }
 
+interface FindAll {
+  filter?: any;
+  populate?: any;
+  select?: string;
+}
+
 interface EditOne {
   filter: any;
   payload: any;
@@ -65,4 +71,5 @@ export {
   UserFieldLimits,
   GenderUser,
   VisibleInfo,
+  FindAll,
 };

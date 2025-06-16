@@ -18,7 +18,6 @@ import * as bcrypt from 'bcryptjs';
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject(forwardRef(() => OtpService))
     private readonly otpService: OtpService,
     private readonly tokenService: TokenService,
     private readonly usersRepository: UsersRepository,
@@ -36,6 +35,25 @@ export class AuthService {
     });
     return {
       otpId: otpRecord.otpId,
+    };
+  }
+
+  public async verifyAccount(dto: VerifyAccountDto) {
+    const { otpId, otpCode } = dto;
+    const verifyOtp = await this.otpService.verify({ otpId, otpCode });
+    const user = await this.usersRepository.edit({
+      filter: { _id: verifyOtp?.userId },
+      payload: { isEmailVerified: true },
+      select: '+email +phoneNumber',
+    });
+    const token = await this.tokenService.generateToken({
+      userId: user._id,
+      roles: user.roles,
+    });
+    const { password, ...other } = user.toObject();
+    return {
+      token,
+      user: other,
     };
   }
 
@@ -66,7 +84,6 @@ export class AuthService {
         message: 'Otp has sent successfully',
       };
     }
-    console.log('skip 2FA');
 
     const token = await this.tokenService.generateToken({
       userId: user._id,
@@ -78,37 +95,6 @@ export class AuthService {
       token,
       user: other,
     };
-  }
-
-  public async forgetPassword(dto: ForgetPasswordDto) {
-    const { email } = dto;
-    await this.usersRepository.findOne({ filter: { email } });
-    const otp = await this.otpService.send({
-      email,
-      typeSend: 'forgetPass',
-    });
-
-    return {
-      otpId: otp.otpId,
-    };
-  }
-
-  public async restPassword(dto: RestPassDto) {
-    const { confirmPass, email, newPass } = dto;
-    const user = await this.usersRepository.findOne({ filter: { email } });
-    if (!user.isReqForgetPassVerified)
-      throw new BadRequestException(
-        'You must verify OTP before resetting password',
-      );
-
-    if (confirmPass !== newPass)
-      throw new BadRequestException('Confirm password not match new password');
-
-    const hashPass = await bcrypt.hash(newPass, 10);
-    await this.usersRepository.edit({
-      filter: { _id: user?._id },
-      payload: { password: hashPass, isReqForgetPassVerified: false },
-    });
   }
 
   public async verify2FA(dto: VerifyAccountDto) {
@@ -136,22 +122,16 @@ export class AuthService {
     };
   }
 
-  public async verifyAccount(dto: VerifyAccountDto) {
-    const { otpId, otpCode } = dto;
-    const verifyOtp = await this.otpService.verify({ otpId, otpCode });
-    const user = await this.usersRepository.edit({
-      filter: { _id: verifyOtp?.userId },
-      payload: { isEmailVerified: true },
-      select: '+email +phoneNumber',
+  public async forgetPassword(dto: ForgetPasswordDto) {
+    const { email } = dto;
+    await this.usersRepository.findOne({ filter: { email } });
+    const otp = await this.otpService.send({
+      email,
+      typeSend: 'forgetPass',
     });
-    const token = await this.tokenService.generateToken({
-      userId: user._id,
-      roles: user.roles,
-    });
-    const { password, ...other } = user.toObject();
+
     return {
-      token,
-      user: other,
+      otpId: otp.otpId,
     };
   }
 
@@ -163,5 +143,23 @@ export class AuthService {
       payload: { isReqForgetPassVerified: true },
     });
     return;
+  }
+
+  public async restPassword(dto: RestPassDto) {
+    const { confirmPass, email, newPass } = dto;
+    const user = await this.usersRepository.findOne({ filter: { email } });
+    if (!user.isReqForgetPassVerified)
+      throw new BadRequestException(
+        'You must verify OTP before resetting password',
+      );
+
+    if (confirmPass !== newPass)
+      throw new BadRequestException('Confirm password not match new password');
+
+    const hashPass = await bcrypt.hash(newPass, 10);
+    await this.usersRepository.edit({
+      filter: { _id: user?._id },
+      payload: { password: hashPass, isReqForgetPassVerified: false },
+    });
   }
 }

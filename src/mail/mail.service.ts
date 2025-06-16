@@ -43,8 +43,8 @@ export class MailService {
 
     await this.safeSendMail({
       to: email,
-      from: '"Othnix" <no-reply@thesabisway.com>',
-      subject: 'Othnix - Email Verification',
+      from: '"OTHNIX E-Commerce" <no-reply@thesabisway.com>',
+      subject: 'Email Verification',
       template: 'otp',
       context: {
         username: name,
@@ -63,8 +63,8 @@ export class MailService {
 
     await this.safeSendMail({
       to: email,
-      from: '"Othnix" <no-reply@thesabisway.com>',
-      subject: 'Othnix - Forget Password',
+      from: '"OTHNIX E-Commerce" <no-reply@thesabisway.com>',
+      subject: 'Forget Password',
       template: 'forget-password',
       context: {
         msgs: {

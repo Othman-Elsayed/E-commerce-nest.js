@@ -8,9 +8,9 @@ export class SendOtpDto {
 
   @IsOptional()
   @IsString()
-  typeSend?: 'verifyEmail' | 'forgetPass' | '2fa';
+  typeSend?: 'verifyEmail' | 'forgetPass' | 'changeEmail' | '2fa';
 
   @IsOptional()
   @IsString()
-  verificationLink?: string;
+  storage?: string;
 }

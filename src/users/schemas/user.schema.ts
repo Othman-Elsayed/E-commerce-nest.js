@@ -64,6 +64,12 @@ export class User {
     type: Boolean,
     default: false,
   })
+  isEmailChangeVerified: boolean;
+
+  @Prop({
+    type: Boolean,
+    default: false,
+  })
   isReqForgetPassVerified: boolean;
 
   @Prop({

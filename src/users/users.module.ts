@@ -1,9 +1,10 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './schemas/user.schema';
 import { UsersService } from './users.service';
 import { UsersRepository } from './repository/users.repository';
 import { UsersController } from './users.controller';
+import { OtpModule } from 'src/otp/otp.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { UsersController } from './users.controller';
         schema: UserSchema,
       },
     ]),
+    forwardRef(() => OtpModule),
   ],
   providers: [UsersService, UsersRepository],
   controllers: [UsersController],

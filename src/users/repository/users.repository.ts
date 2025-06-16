@@ -7,16 +7,24 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from '../schemas/user.schema';
-import { EditOne, FindOne } from '@shared/constants';
+import { EditOne, FindAll, FindOne } from '@shared/constants';
 @Injectable()
 export class UsersRepository {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<User>,
   ) {}
 
-  public async findAll() {
+  public async findAll({ filter, select, populate }: FindAll) {
     try {
-      return await this.userModel.find();
+      const query = this.userModel.find(filter);
+      if (select) {
+        query.select(select);
+      }
+      if (populate) {
+        query.populate(populate);
+      }
+      const users = await query;
+      return users;
     } catch (err) {
       throw new InternalServerErrorException(
         'Failed fetch user, please try later again',

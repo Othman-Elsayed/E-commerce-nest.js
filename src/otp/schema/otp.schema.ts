@@ -6,6 +6,12 @@ export class Otp extends Document {
   @Prop({ required: true })
   userId: string;
 
+  @Prop({
+    type: String,
+    trim: true,
+  })
+  storage: string;
+
   @Prop({ required: true })
   code: string;
 
